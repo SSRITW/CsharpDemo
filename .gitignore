@@ -3,3 +3,10 @@
 ################################################################################
 
 /WebApiDemo/appsettings.json
+/WebApiDemo/bin/
+/WebApiDemo/obj/
+/.vs/
+
+/Shared/bin/
+/Shared/obj/
+
