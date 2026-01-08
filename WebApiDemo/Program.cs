@@ -1,6 +1,7 @@
 
 using Microsoft.EntityFrameworkCore;
 using WebApiDemo.Data;
+using WebApiDemo.Filters;
 using WebApiDemo.Services;
 using WebApiDemo.Services.Interfaces;
 
@@ -14,9 +15,9 @@ namespace WebApiDemo
 
             // Add services to the container.
 
-            //builder.Logging.AddLog4Net("CfgFile/log4net.config");
+            builder.Logging.AddLog4Net("CfgFile/log4net.config");
 
-            builder.Services.AddDbContext<Data.AppDbContext>(option => 
+            builder.Services.AddDbContext<AppDbContext>(option => 
             {
                 option.UseNpgsql(builder.Configuration.GetConnectionString("Default")!);
             });
@@ -24,7 +25,10 @@ namespace WebApiDemo
             builder.Services.AddTransient<IBaseService, BaseService>();
             builder.Services.AddTransient<IDeviceService, DeviceService>();
 
-            builder.Services.AddControllers();
+            builder.Services.AddControllers(options => 
+            {
+                options.Filters.Add<ActionLogFilter>();
+            });
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
             builder.Services.AddSwaggerGen();
