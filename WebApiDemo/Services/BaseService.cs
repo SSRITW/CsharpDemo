@@ -1,4 +1,6 @@
 ﻿using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using WebApiDemo.Data;
 using WebApiDemo.DTOs;
 using WebApiDemo.Services.Interfaces;
@@ -83,16 +85,11 @@ namespace WebApiDemo.Services
             return result;
         }
 
-        public int Update<T>(T model) where T : class
+        public int Update<T>(Guid id, Expression<Func<SetPropertyCalls<T>, SetPropertyCalls<T>>> setPropertyCalls) where T : class
         {
-            this._db.Set<T>().Update(model);
-            return this._db.SaveChanges();
-        }
-
-        public int UpdateBatch<T>(List<T> models) where T : class
-        {
-            this._db.Set<T>().UpdateRange(models);
-            return this._db.SaveChanges();
+            return _db.Set<T>()
+                .Where(e => EF.Property<Guid>(e, "Id") == id)
+                .ExecuteUpdate(setPropertyCalls);
         }
     }
 }

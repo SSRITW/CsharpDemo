@@ -2,10 +2,12 @@
 using Shared.Constants;
 using Shared.DTOs;
 using Shared.Enums;
+using System;
 using System.Linq.Expressions;
 using WebApiDemo.DTOs;
 using WebApiDemo.Models;
 using WebApiDemo.Services.Interfaces;
+using static Shared.Enums.DeviceEnum;
 
 namespace WebApiDemo.Controllers
 {
@@ -20,18 +22,11 @@ namespace WebApiDemo.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        public CommonDTO<DeviceModel>? Find(string id)
+        public CommonDTO<DeviceModel>? Find(Guid id)
         {
             CommonDTO<DeviceModel> result = new CommonDTO<DeviceModel>();
-            if (Guid.TryParse(id, out Guid guid))
-            {
-                result.Data =  _deviceService.Find<DeviceModel>(guid);
-                result.Code = ErrorCode.Success;
-            }
-            else
-            {
-                result.Code = ErrorCode.InvalidParameter;
-            }
+            result.Data =  _deviceService.Find<DeviceModel>(id);
+            result.Code = ErrorCode.Success;
             return result;
         }
 
@@ -82,19 +77,61 @@ namespace WebApiDemo.Controllers
         }
 
         [HttpPut("update")]
-        public CommonDTO<object> Update(DeviceModel model)
+        public CommonDTO<object> Update(Guid id, string deviceId, string deviceName, int deviceType, int status)
         {
             CommonDTO<object> result = new CommonDTO<object>();
-            int rowNum = _deviceService.Update(model);
+            
+            if (id == Guid.Empty)
+            {
+                result.Code = ErrorCode.InvalidParameter;
+                result.Message = "id is empty";
+                return result;
+            }
+
+            int rowNum = _deviceService.Update<DeviceModel>(id, s =>
+                s.SetProperty(d => d.UpdateTime, DateTime.UtcNow)
+                 .SetProperty(d => d.DeviceId, deviceId) // 直接使用 deviceId
+                 .SetProperty(d => d.DeviceType, deviceType)
+                 .SetProperty(d => d.DeviceName, deviceName)
+                 .SetProperty(d => d.Status, status)
+            );
+
+            if (rowNum == 0)
+            {
+                result.Code = ErrorCode.NotFound;
+                result.Message = "Device not found";
+                return result;
+            }
+            
+            result.Code = ErrorCode.Success;
             result.Message = $"{rowNum} rows affected";
             return result;
         }
-
-        [HttpPut("update_batch")]
-        public CommonDTO<object> UpdateBatch(List<DeviceModel> models)
+        [HttpPut("maintain")]
+        public CommonDTO<object> Maintain(Guid id, string maintainerName)
         {
             CommonDTO<object> result = new CommonDTO<object>();
-            int rowNum = _deviceService.UpdateBatch(models);
+            if (id == Guid.Empty)
+            {
+                result.Code = ErrorCode.InvalidParameter;
+                result.Message = "id is empty";
+                return result;
+            }
+            
+            int rowNum = _deviceService.Update<DeviceModel>(id, s => s
+                .SetProperty(d => d.LastMaintainerName, maintainerName)
+                .SetProperty(d => d.LastMaintainTime, DateTime.UtcNow)
+                .SetProperty(d => d.UpdateTime, DateTime.UtcNow)
+            );
+            
+            if (rowNum == 0)
+            {
+                result.Code = ErrorCode.NotFound;
+                result.Message = "Device not found";
+                return result;
+            }
+            
+            result.Code = ErrorCode.Success;
             result.Message = $"{rowNum} rows affected";
             return result;
         }

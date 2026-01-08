@@ -2,7 +2,6 @@
 {
     public class DeviceModel : BaseModel
     {
-        public Guid Id { get; set; } = Guid.NewGuid();
         public string DeviceId { get; set; } = string.Empty;
         public string DeviceName { get; set; } = string.Empty;
         public int DeviceType { get; set; } = 0;

@@ -1,4 +1,6 @@
 ﻿using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using WebApiDemo.DTOs;
 
 namespace WebApiDemo.Services.Interfaces
@@ -13,9 +15,8 @@ namespace WebApiDemo.Services.Interfaces
 
         public T Insert<T>(T model) where T : class;
         public List<T> InsertBatch<T>(List<T> models) where T : class;
-        public int Update<T>(T model) where T : class;
-        public int UpdateBatch<T>(List<T> models) where T : class;
         public int Delete<T>(T model) where T : class;
         public int DeleteBatch<T>(List<T> models) where T : class;
+        public int Update<T>(Guid id, Expression<Func<SetPropertyCalls<T>, SetPropertyCalls<T>>> setPropertyCalls) where T : class;
     }
 }
