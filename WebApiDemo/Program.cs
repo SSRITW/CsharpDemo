@@ -1,5 +1,7 @@
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using WebApiDemo.AutoMappers;
 using WebApiDemo.Data;
 using WebApiDemo.Filters;
 using WebApiDemo.Services;
@@ -24,6 +26,9 @@ namespace WebApiDemo
 
             builder.Services.AddTransient<IBaseService, BaseService>();
             builder.Services.AddTransient<IDeviceService, DeviceService>();
+            builder.Services.AddTransient<IAccountService, AccountService>();
+
+            builder.Services.AddAutoMapper(cfg => { },typeof(AutoMapperSettings));
 
             builder.Services.AddControllers(options => 
             {
@@ -31,7 +36,11 @@ namespace WebApiDemo
             });
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(m =>
+            {
+                string xmlFile = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                m.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFile),true);
+            });
 
             var app = builder.Build();
 

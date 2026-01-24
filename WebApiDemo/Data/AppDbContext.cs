@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Shared.Models;
 using WebApiDemo.Models;
 
 namespace WebApiDemo.Data
@@ -10,5 +11,7 @@ namespace WebApiDemo.Data
         }
 
         public virtual DbSet<DeviceModel> Devices { get; set; }
+        public virtual DbSet<AccountModel> Accounts { get; set; }
+        
     }
 }

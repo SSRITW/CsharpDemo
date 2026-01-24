@@ -12,5 +12,7 @@ namespace Shared.Constants
         public const int UnknownError = 1;
         public const int NotFound = 2;
         public const int InvalidParameter = 3;
+        public const int Existing = 4;
+        public const int PasswordIncorrect = 5;
     }
 }

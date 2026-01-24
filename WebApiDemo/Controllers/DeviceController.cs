@@ -11,12 +11,16 @@ using static Shared.Enums.DeviceEnum;
 
 namespace WebApiDemo.Controllers
 {
+    /// <summary>
+    /// 設備API
+    /// </summary>
     [ApiController]
+    //[Route("[controller]/[action]")]
     [Route("[controller]")]
-    public class DeviceControllers : ControllerBase
+    public class DeviceController : ControllerBase
     {
         private IDeviceService _deviceService;
-        public DeviceControllers(IDeviceService deviceService) {
+        public DeviceController(IDeviceService deviceService) {
             _deviceService = deviceService;
         }
 
