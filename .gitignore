@@ -10,3 +10,6 @@
 /Shared/bin/
 /Shared/obj/
 
+/WPFClient/bin/Debug/net9.0-windows
+/WPFClient/obj
+/WebApiDemo/Migrations

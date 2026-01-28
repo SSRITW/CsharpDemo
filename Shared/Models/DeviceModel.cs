@@ -1,4 +1,4 @@
-﻿namespace WebApiDemo.Models
+﻿namespace Shared.Models
 {
     public class DeviceModel : BaseModel
     {

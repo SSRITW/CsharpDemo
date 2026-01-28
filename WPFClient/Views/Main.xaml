@@ -5,10 +5,116 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WPFClient.Views"
         xmlns:prism="http://prismlibrary.com/"
+        xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
         prism:ViewModelLocator.AutoWireViewModel="True"
         mc:Ignorable="d"
         Title="Main" Height="700" Width="1200">
-    <Grid>
-        
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <md:Card Padding="16" Margin="0,0,0,16">
+            <WrapPanel Orientation="Horizontal">
+
+                <StackPanel Orientation="Horizontal" Margin="0,8,24,8">
+                    <TextBlock Text="状態" 
+                       VerticalAlignment="Center" 
+                       Margin="0,0,8,0"/>
+                    <ComboBox Width="100" 
+                      ItemsSource="{Binding StatusOptions}"
+                      DisplayMemberPath="Name"
+                      SelectedValuePath="Value"
+                      SelectedValue="{Binding Status}"/>
+
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Margin="0,8,24,8" Cursor="">
+                    <TextBlock Text="設備種類" 
+                       VerticalAlignment="Center" 
+                       Margin="0,0,8,0"/>
+                    <ComboBox Width="100" 
+                      ItemsSource="{Binding DeviceTypeOptions}"
+                      SelectedValuePath="Value"
+                      DisplayMemberPath="Name"
+                      SelectedValue="{Binding DeviceType}"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Margin="0,8,24,8">
+                    <TextBlock Text="設備名" 
+                       VerticalAlignment="Center" 
+                       Margin="0,0,8,0"/>
+                    <TextBox Width="180" 
+                     Text="{Binding DeviceName}"
+                     md:TextFieldAssist.HasClearButton="True"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Margin="0,8,0,8">
+                    <Button Content="検索" 
+                    Command="{Binding RefreshDeviceListCmm}"
+                    Margin="0,0,8,0"/>
+                    <Button Content="新規作成" 
+                    Command="{Binding OpenDeviceInfoDialogCmm}" Cursor="Hand"/>
+                </StackPanel>
+
+            </WrapPanel>
+        </md:Card>
+
+        <md:Card Grid.Row="1" VerticalAlignment="Stretch">
+            <DataGrid ItemsSource="{Binding DeviceList}" 
+                      AutoGenerateColumns="False"
+                      IsReadOnly="True"
+                      SelectionMode="Single">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="GUID" Binding="{Binding Id}" Width="Auto"/>
+                    <DataGridTextColumn Header="ID" Binding="{Binding DeviceId}" Width="Auto"/>
+                    <DataGridTextColumn Header="設備名" Binding="{Binding DeviceName}" Width="*"/>
+                    <DataGridTextColumn Header="前回のメンテナー" Binding="{Binding LastMaintainerName}" Width="*"/>
+                    <DataGridTextColumn Header="前回メンテナンス時間" Binding="{Binding LastMaintainTime}" Width="*"/>
+                    <DataGridTextColumn Header="作成時間" Binding="{Binding CreateTime}" Width="Auto"/>
+                    <DataGridTextColumn Header="更新時間" Binding="{Binding UpdateTime}" Width="Auto"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </md:Card>
+
+        <StackPanel Grid.Row="2" 
+                    Orientation="Horizontal" 
+                    HorizontalAlignment="Right" 
+                    Margin="0,16,0,0">
+
+            <TextBlock Text="每页行数:" VerticalAlignment="Center" Margin="0,0,8,0"/>
+            <ComboBox SelectedValue="{Binding PageSize}" ItemsSource="{Binding PageSizeOptions}" Width="35" Margin="0,0,24,0">
+            </ComboBox>
+
+            <TextBlock VerticalAlignment="Center" Margin="0,0,16,0">
+                <Run Text="共 "/>
+                <Run Text="{Binding RecordCount}" FontWeight="Bold"/>
+                <Run Text=" 条"/>
+            </TextBlock>
+
+            <Button Command="{Binding FirstPageCommand}" 
+                    Style="{StaticResource MaterialDesignIconButton}"
+                    Content="{md:PackIcon Kind=SkipPrevious}"/>
+
+            <Button Command="{Binding PrevPageCommand}" 
+                    Style="{StaticResource MaterialDesignIconButton}"
+                    Content="{md:PackIcon Kind=ChevronLeft}"/>
+
+            <TextBlock VerticalAlignment="Center" Margin="8,0">
+                <Run Text="{Binding PageNum}" FontWeight="Bold"/>
+                <Run Text=" / "/>
+                <Run Text="{Binding TotalPages}"/>
+            </TextBlock>
+
+            <Button Command="{Binding NextPageCommand}" 
+                    Style="{StaticResource MaterialDesignIconButton}"
+                    Content="{md:PackIcon Kind=ChevronRight}"/>
+
+            <Button Command="{Binding LastPageCommand}" 
+                    Style="{StaticResource MaterialDesignIconButton}"
+                    Content="{md:PackIcon Kind=SkipNext}"/>
+        </StackPanel>
     </Grid>
 </Window>

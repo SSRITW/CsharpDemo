@@ -27,7 +27,4 @@
     <Resource Include="images\computer_azarashi.png" />
   </ItemGroup>
 
-  <ItemGroup>
-  </ItemGroup>
-
 </Project>

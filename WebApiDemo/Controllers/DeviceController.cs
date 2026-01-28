@@ -2,10 +2,10 @@
 using Shared.Constants;
 using Shared.DTOs;
 using Shared.Enums;
+using Shared.Models;
 using System;
 using System.Linq.Expressions;
 using WebApiDemo.DTOs;
-using WebApiDemo.Models;
 using WebApiDemo.Services.Interfaces;
 using static Shared.Enums.DeviceEnum;
 
@@ -35,7 +35,7 @@ namespace WebApiDemo.Controllers
         }
 
         [HttpGet("list")]
-        public CommonDTO<PageDTO<DeviceModel>> GetPage(int status, int deviceType, string? deviceName, int orderByType, int pageSize, int pageIndex, bool isAsc = true)
+        public CommonDTO<PageDTO<DeviceModel>> GetPage(int status, int deviceType, string? deviceName, int orderByType, int pageSize, int pageNum, bool isAsc = true)
         {
             CommonDTO<PageDTO<DeviceModel>> result = new CommonDTO<PageDTO<DeviceModel>>();
             if (pageSize > Page.MaxPageSize || pageSize < Page.MinPageSize)
@@ -63,21 +63,41 @@ namespace WebApiDemo.Controllers
                     funcOrderBy = funcOrderBy => funcOrderBy.CreateTime;
                     break;
             }
-            result.Data = _deviceService.QueryPage(funcWhere, pageSize, pageIndex, funcOrderBy, isAsc);
+            result.Data = _deviceService.QueryPage(funcWhere, pageSize, pageNum, funcOrderBy, isAsc);
             result.Code = ErrorCode.Success;
             return result;
         }
 
         [HttpPost("insert")]
-        public DeviceModel Insert(DeviceModel model)
-        {   
-            return _deviceService.Insert(model);
+        public CommonDTO<DeviceModel> Insert(DeviceModel model)
+        {
+            CommonDTO<DeviceModel> result = new CommonDTO<DeviceModel>();
+            if (model.Status == 0 || model.DeviceType == 0
+                || model.DeviceName == "" || model.DeviceId == "")
+            {
+                result.Code = ErrorCode.InvalidParameter;
+                return result;
+            }
+            result.Data = _deviceService.Insert(model);
+            return result;
         }
 
         [HttpPost("insert_batch")]
-        public List<DeviceModel> InsertBatch(List<DeviceModel> models)
+        public CommonDTO<List<DeviceModel>> InsertBatch(List<DeviceModel> models)
         {
-            return _deviceService.InsertBatch(models);
+            CommonDTO<List<DeviceModel>> result = new CommonDTO<List<DeviceModel>>();
+            for (int i = 0; i < models.Count; i++)
+            {
+                var model = models[i];
+                if (model.Status == 0 || model.DeviceType == 0
+                    || model.DeviceName == "" || model.DeviceId == "")
+                {
+                    result.Code = ErrorCode.InvalidParameter;
+                    return result;
+                }
+            }
+            result.Data = _deviceService.InsertBatch(models);
+            return result;
         }
 
         [HttpPut("update")]

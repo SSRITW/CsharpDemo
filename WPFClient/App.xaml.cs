@@ -29,7 +29,8 @@ namespace WPFClient
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             // dialog登録
-            containerRegistry.RegisterDialog<Login,LoginViewModel>();
+            containerRegistry.RegisterDialog<Login, LoginViewModel>();
+            containerRegistry.RegisterDialog<DeviceInfo, DeviceInfoViewModel>();
 
             containerRegistry.GetContainer()
                 .Register<HttpRestClient>(made:Parameters.Of.Type<string>(serviceKey:"webUrl"));

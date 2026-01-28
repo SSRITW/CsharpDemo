@@ -1,4 +1,5 @@
 <Solution>
   <Project Path="Shared/Shared.csproj" Id="9c11cf0d-fb16-4345-85ee-7caa82a51f21" />
   <Project Path="WebApiDemo/WebApiDemo.csproj" />
+  <Project Path="WPFClient/WPFClient.csproj" Id="bf4c7cbd-7680-4a0c-92bc-d89227d318f1" />
 </Solution>

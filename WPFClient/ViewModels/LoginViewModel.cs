@@ -75,13 +75,12 @@ namespace WPFClient.ViewModels
             if (respone.Code == ErrorCode.Success)
             {
                 Aggregator.GetEvent<MsgEvent>().Publish("ログインしました");
-                SelectedIndex = 0;
+                RequestClose.Invoke(new DialogResult(ButtonResult.OK));
             }
             else
             {
                 Aggregator.GetEvent<MsgEvent>().Publish($"Error: {respone.Message}");
             }
-            //RequestClose.Invoke(new DialogResult(ButtonResult.OK));
         }
 
         private void RegisterExecute()
